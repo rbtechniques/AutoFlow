@@ -1,11 +1,12 @@
 
-
 from flask import Flask, render_template, request, redirect
+
+from storage import init_db, add_workflow, get_workflows
 
 app = Flask(__name__)
 
-# Temporary storage for workflows
-workflows = []
+# Create the database table if it doesn't exist
+init_db()
 
 
 @app.route("/")
@@ -15,23 +16,25 @@ def home():
 
 @app.route("/workflows")
 def workflow_page():
-    return render_template("workflows.html", workflows=workflows)
+    workflows = get_workflows()
+
+    return render_template(
+        "workflows.html",
+        workflows=workflows
+    )
 
 
 @app.route("/create-workflow", methods=["POST"])
 def create_workflow():
 
-    name = request.form.get("name")
-    description = request.form.get("description")
-    workflow_type = request.form.get("type")
+    name = request.form.get("name", "").strip()
+    description = request.form.get("description", "").strip()
+    workflow_type = request.form.get("type", "").strip()
 
-    workflow = {
-        "name": name,
-        "description": description,
-        "type": workflow_type
-    }
+    if not name or not description or not workflow_type:
+        return redirect("/workflows")
 
-    workflows.append(workflow)
+    add_workflow(name, description, workflow_type)
 
     return redirect("/workflows")
 
