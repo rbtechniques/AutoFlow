@@ -15,10 +15,23 @@ def get_connection():
     return connection
 
 
+
 def init_db():
     with get_connection() as connection:
+
+        # Create workflows table
         connection.execute("""
             CREATE TABLE IF NOT EXISTS workflows (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL,
+                type TEXT NOT NULL
+            )
+        """)
+
+        # Create history table
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 action TEXT NOT NULL,
                 details TEXT NOT NULL,
@@ -26,6 +39,7 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+
 
 
 def add_workflow(name, description, workflow_type):
