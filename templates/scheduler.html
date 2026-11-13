@@ -13,220 +13,239 @@
 <div class="dashboard">
 
     <aside class="sidebar">
-        <h2>AutoFlow</h2>
+        <h2 class="brand">AutoFlow<span>.</span></h2>
 
-        <nav>
-            <a href="/">Dashboard</a>
-            <a href="/workflows">Workflows</a>
-            <a href="/organizer">File Organizer</a>
-            <a href="/history">Automation History</a>
-            <a href="/scheduler" class="active">Scheduler</a>
+        <nav class="sidebar-nav">
+            <a href="/" class="nav-link">
+                <span>⌂</span> Dashboard
+            </a>
+
+            <a href="/workflows" class="nav-link">
+                <span>⚙</span> Workflows
+            </a>
+
+            <a href="/organizer" class="nav-link">
+                <span>▣</span> File Organizer
+            </a>
+
+            <a href="/history" class="nav-link">
+                <span>◷</span> Automation History
+            </a>
+
+            <a href="/scheduler" class="nav-link active" aria-current="page">
+                <span>◷</span> Scheduler
+            </a>
         </nav>
     </aside>
 
-    
-<main class="main-content">
+    <main class="main-content">
 
-    <div class="scheduler-header">
-        <h1>Scheduler</h1>
-        <p>Plan and manage your automated workflows.</p>
-    </div>
+        <div class="scheduler-header">
+            <div>
+                <h1>Scheduler</h1>
+                <p>Plan and manage your automated workflows.</p>
+            </div>
+        </div>
 
-    {% if error %}
-        <div class="error-message">{{ error }}</div>
-    {% endif %}
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
 
-    <div class="scheduler-grid">
+        <div class="scheduler-grid">
 
-        <!-- Create Schedule -->
+            <section class="scheduler-card">
 
-        <section class="scheduler-card">
+                <h2>Create New Schedule</h2>
 
-            <h2>Create New Schedule</h2>
+                <form action="/add-schedule"
+                      method="POST"
+                      class="scheduler-form">
 
-            <form action="/add-schedule"
-                  method="POST"
-                  class="scheduler-form">
+                    <label for="workflow_id">Select Workflow</label>
 
-                <label>Select Workflow</label>
+                    <select name="workflow_id" id="workflow_id" required>
+                        {% for workflow in workflows %}
+                            <option
+                                value="{{ workflow.id }}"
+                                data-type="{{ workflow.type }}">
+                                {{ workflow.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
 
-                <label>Select Workflow</label>
+                    <div id="folder_path_field" style="display:none;">
 
-                <select name="workflow_id" id="workflow_id" required>
-                    {% for workflow in workflows %}
-                        <option
-                            value="{{ workflow.id }}"
-                            data-type="{{ workflow.type }}"
-                        >
-                            {{ workflow.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <div id="folder_path_field" style="display:none;">
+                        <label for="folder_path">Folder Path</label>
 
-                <label>Folder Path</label>
-
-                <input
-                    type="text"
-                    name="folder_path"
-                    id="folder_path"
-                    placeholder="C:\Users\YourName\Documents"
-                >
-
-                </div>
-                <label>Schedule Type</label>
-
-                <select name="schedule_type" id="schedule_type" required>
-                    <option value="Once">One Time</option>
-                    <option value="Daily">Daily</option>
-                    <option value="Weekly">Weekly</option>
-                </select>
-
-                <div id="once_fields">
-
-                    <label>Date and Time</label>
-
-                    <input type="datetime-local" name="run_at">
-
-                </div>
-
-                <div id="recurring_fields" style="display:none;">
-
-                    <label>Run Time</label>
-
-                    <input type="time" name="run_time">
-
-                    <div id="weekly_fields" style="display:none;">
-
-                        <label>Day of Week</label>
-
-                        <select name="day_of_week">
-                            <option value="0">Monday</option>
-                            <option value="1">Tuesday</option>
-                            <option value="2">Wednesday</option>
-                            <option value="3">Thursday</option>
-                            <option value="4">Friday</option>
-                            <option value="5">Saturday</option>
-                            <option value="6">Sunday</option>
-                        </select>
+                        <input
+                            type="text"
+                            name="folder_path"
+                            id="folder_path"
+                            placeholder="C:\Users\YourName\Documents">
 
                     </div>
 
-                </div>
+                    <label for="schedule_type">Schedule Type</label>
 
-                <button type="submit" class="create-btn">
-                    Create Schedule
-                </button>
+                    <select name="schedule_type" id="schedule_type" required>
+                        <option value="Once">One Time</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                    </select>
 
-            </form>
+                    <div id="once_fields">
 
-        </section>
+                        <label for="run_at">Date and Time</label>
 
-        <!-- Existing Schedules -->
+                        <input type="datetime-local" name="run_at" id="run_at">
 
-        <section class="scheduler-card">
+                    </div>
 
-            <h2>Existing Schedules</h2>
+                    <div id="recurring_fields" style="display:none;">
 
-            <div class="schedule-list">
+                        <label for="run_time">Run Time</label>
 
-                {% for schedule in schedules %}
+                        <input type="time" name="run_time" id="run_time">
 
-                    <div class="schedule-item">
+                        <div id="weekly_fields" style="display:none;">
 
-                        <h3>{{ schedule.workflow_name }}</h3>
+                            <label for="day_of_week">Day of Week</label>
 
-                        <p>
-                            Type: {{ schedule.schedule_type }}
-                        </p>
-
-                        {% if schedule.schedule_type == "Once" %}
-
-                            <p>Run at: {{ schedule.run_at }}</p>
-
-                        {% elif schedule.schedule_type == "Daily" %}
-
-                            <p>Every day at: {{ schedule.run_time }}</p>
-
-                        {% elif schedule.schedule_type == "Weekly" %}
-
-                            <p>Every week at: {{ schedule.run_time }}</p>
-
-                            <p>
-                                Day:
-                                {{ ["Monday", "Tuesday", "Wednesday",
-                                    "Thursday", "Friday", "Saturday",
-                                    "Sunday"][schedule.day_of_week] }}
-                            </p>
-
-                        {% endif %}
-
-                        <span class="schedule-status">
-                            {{ "Active" if schedule.is_active else "Disabled" }}
-                        </span>
-                        <div class="schedule-actions">
-
-                            <form action="/toggle-schedule/{{ schedule.id }}" method="POST">
-
-                                <button type="submit" class="schedule-toggle-btn">
-                                    {{ "Disable" if schedule.is_active else "Enable" }}
-                                </button>
-
-                            </form>
-
-                            <form action="/delete-schedule/{{ schedule.id }}" method="POST"
-                                onsubmit="return confirm('Delete this schedule?');">
-
-                                <button type="submit" class="schedule-delete-btn">
-                                    Delete
-                                </button>
-
-                            </form>
+                            <select name="day_of_week" id="day_of_week">
+                                <option value="0">Monday</option>
+                                <option value="1">Tuesday</option>
+                                <option value="2">Wednesday</option>
+                                <option value="3">Thursday</option>
+                                <option value="4">Friday</option>
+                                <option value="5">Saturday</option>
+                                <option value="6">Sunday</option>
+                            </select>
 
                         </div>
 
                     </div>
 
-                {% else %}
+                    <button type="submit" class="create-btn">
+                        Create Schedule
+                    </button>
 
-                    <p>No schedules created yet.</p>
+                </form>
 
-                {% endfor %}
+            </section>
 
-            </div>
+            <section class="scheduler-card">
 
-        </section>
+                <h2>Existing Schedules</h2>
 
-    </div>
+                <div class="schedule-list">
 
-</main>
+                    {% for schedule in schedules %}
 
+                        <div class="schedule-item">
+
+                            <h3>{{ schedule.workflow_name }}</h3>
+
+                            <p>Type: {{ schedule.schedule_type }}</p>
+
+                            {% if schedule.schedule_type == "Once" %}
+
+                                <p>Run at: {{ schedule.run_at }}</p>
+
+                            {% elif schedule.schedule_type == "Daily" %}
+
+                                <p>Every day at: {{ schedule.run_time }}</p>
+
+                            {% elif schedule.schedule_type == "Weekly" %}
+
+                                <p>Every week at: {{ schedule.run_time }}</p>
+
+                                <p>
+                                    Day:
+                                    {{ ["Monday", "Tuesday", "Wednesday",
+                                        "Thursday", "Friday", "Saturday",
+                                        "Sunday"][schedule.day_of_week] }}
+                                </p>
+
+                            {% endif %}
+
+                            <span class="schedule-status">
+                                {{ "Active" if schedule.is_active else "Inactive" }}
+                            </span>
+
+                            <div class="schedule-actions">
+
+                                <form action="/toggle-schedule/{{ schedule.id }}"
+                                      method="POST">
+
+                                    <button type="submit" class="schedule-toggle-btn">
+                                        {{ "Disable" if schedule.is_active else "Enable" }}
+                                    </button>
+
+                                </form>
+
+                                <form action="/delete-schedule/{{ schedule.id }}"
+                                      method="POST"
+                                      onsubmit="return confirm('Delete this schedule?');">
+
+                                    <button type="submit" class="schedule-delete-btn">
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    {% else %}
+
+                        <p>No schedules created yet.</p>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
 
 </div>
 
 <script>
+
 const scheduleType = document.getElementById("schedule_type");
 
 const onceFields = document.getElementById("once_fields");
 const recurringFields = document.getElementById("recurring_fields");
 const weeklyFields = document.getElementById("weekly_fields");
 
+const runAt = document.getElementById("run_at");
+const runTime = document.getElementById("run_time");
+
 function updateScheduleFields() {
 
     const type = scheduleType.value;
 
-    onceFields.style.display = type === "Once" ? "block" : "none";
+    onceFields.style.display =
+        type === "Once" ? "block" : "none";
 
     recurringFields.style.display =
         type === "Once" ? "none" : "block";
 
     weeklyFields.style.display =
         type === "Weekly" ? "block" : "none";
+
+    runAt.required = type === "Once";
+    runTime.required = type !== "Once";
 }
 
 scheduleType.addEventListener("change", updateScheduleFields);
 
 updateScheduleFields();
+
+
 const workflowSelect = document.getElementById("workflow_id");
 
 const folderPathField =
@@ -240,8 +259,7 @@ function updateFolderField() {
     const selectedOption =
         workflowSelect.options[workflowSelect.selectedIndex];
 
-    const workflowType =
-        selectedOption.dataset.type;
+    const workflowType = selectedOption.dataset.type;
 
     const needsFolder =
         workflowType === "File Management";
@@ -259,6 +277,7 @@ function updateFolderField() {
 workflowSelect.addEventListener("change", updateFolderField);
 
 updateFolderField();
+
 </script>
 
 </body>

@@ -1,26 +1,25 @@
 
-from organizer import scan_folder
+
+from organizer import organize_folder
 
 
 def execute_workflow(workflow, folder_path=None):
 
     workflow_type = workflow["type"]
 
-    # File Management workflow
     if workflow_type == "File Management":
 
         if not folder_path:
             raise ValueError("Please provide a folder path.")
 
-        files = scan_folder(folder_path)
+        moved_files = organize_folder(folder_path)
 
         return {
             "success": True,
-            "message": f"Successfully scanned {len(files)} files.",
-            "files_processed": len(files)
+            "message": f"Successfully organized {moved_files} files.",
+            "files_processed": moved_files
         }
 
-    # Productivity workflow
     elif workflow_type == "Productivity":
 
         return {
@@ -30,6 +29,4 @@ def execute_workflow(workflow, folder_path=None):
         }
 
     else:
-        raise ValueError(
-            "This workflow type is not supported yet."
-        )
+        raise ValueError("This workflow type is not supported yet.")

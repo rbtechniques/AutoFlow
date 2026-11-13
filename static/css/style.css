@@ -521,3 +521,192 @@ body {
     background: #3b2028;
     color: #f87171;
 }
+
+
+/* =================================
+   AUTOFLOW GLOBAL LAYOUT FIX
+================================= */
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Sidebar */
+
+.sidebar {
+    width: 260px;
+    min-width: 260px;
+    min-height: 100vh;
+    background: #111827;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #252d3d;
+    flex-shrink: 0;
+}
+
+.brand {
+    font-size: 27px;
+    font-weight: 700;
+    margin-bottom: 45px;
+    letter-spacing: -1px;
+}
+
+.brand span {
+    color: #6c63ff;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-decoration: none;
+    color: #aab3c5;
+    padding: 13px 14px;
+    margin: 0;
+    border-radius: 9px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-nav .nav-link span {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+}
+
+.sidebar-nav .nav-link:hover {
+    background: #202a3b;
+    color: white;
+}
+
+.sidebar-nav .nav-link.active {
+    background: rgba(108, 99, 255, 0.16);
+    color: #a49eff;
+    border-left: 3px solid #6c63ff;
+}
+
+/* Main content */
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 40px;
+    overflow-x: hidden;
+}
+
+/* Form and button improvements */
+
+.create-btn {
+    background: linear-gradient(135deg, #6c63ff, #817aff);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.create-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 99, 255, 0.25);
+}
+
+/* Scheduler improvements */
+
+.scheduler-card {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.schedule-item {
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.schedule-item:hover {
+    border-color: #6c63ff;
+    transform: translateY(-2px);
+}
+
+.schedule-actions form {
+    margin: 0;
+}
+
+.schedule-actions button {
+    transition: 0.2s ease;
+}
+
+.schedule-toggle-btn:hover {
+    background: #35496b;
+}
+
+.schedule-delete-btn:hover {
+    background: #572a35;
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 220px;
+        min-width: 220px;
+    }
+
+    .main-content {
+        padding: 25px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+        padding: 18px;
+    }
+
+    .brand {
+        margin-bottom: 18px;
+    }
+
+    .sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .sidebar-nav .nav-link {
+        width: auto;
+        padding: 10px;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .stats-grid,
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

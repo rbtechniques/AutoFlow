@@ -202,3 +202,16 @@ def delete_schedule(schedule_id):
             DELETE FROM schedules
             WHERE id = ?
         """, (schedule_id,))
+
+
+def deactivate_schedule(schedule_id):
+    with get_connection() as connection:
+        connection.execute(
+            """
+            UPDATE schedules
+            SET is_active = 0
+            WHERE id = ?
+            """,
+            (schedule_id,)
+        )
+

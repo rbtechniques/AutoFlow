@@ -1,11 +1,12 @@
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
-from storage import get_schedules, get_workflow_by_id, add_history
+from storage import get_schedules, get_workflow_by_id, add_history, deactivate_schedule
 from engine import execute_workflow
 
 
 scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
+
 
 
 def run_scheduled_workflow(schedule_id):
@@ -27,7 +28,6 @@ def run_scheduled_workflow(schedule_id):
         return
 
     try:
-
         result = execute_workflow(
             workflow,
             schedule.get("folder_path")
@@ -39,13 +39,22 @@ def run_scheduled_workflow(schedule_id):
             result["files_processed"]
         )
 
-    except Exception as error:
+        print("[AUTOFLOW] Workflow completed successfully!")
 
+    except Exception as error:
         add_history(
             f"Scheduled: {workflow['name']}",
             f"Execution failed: {error}",
             0
         )
+
+        print(f"[AUTOFLOW] Workflow failed: {error}")
+
+    finally:
+        if schedule["schedule_type"] == "Once":
+            deactivate_schedule(schedule_id)
+            print("[AUTOFLOW] One-time schedule deactivated.")
+
 
 
 def load_schedules():
