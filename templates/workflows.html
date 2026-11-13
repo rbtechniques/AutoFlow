@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Workflows | AutoFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Auto<span>Flow.</span></h2>
+            </div>
+
+            <nav>
+                <p class="nav-heading">WORKSPACE</p>
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/workflows" class="nav-link active">My Workflows</a>
+                <a href="#" class="nav-link">File Organizer</a>
+                <a href="#" class="nav-link">Scheduler</a>
+
+                <p class="nav-heading">MANAGEMENT</p>
+                <a href="#" class="nav-link">Automation History</a>
+                <a href="#" class="nav-link">Settings</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <p>AutoFlow v1.0</p>
+                <span>Personal Automation Studio</span>
+            </div>
+        </aside>
+
+
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <h1>My Workflows</h1>
+                    <p>Create and manage your personal automations.</p>
+                </div>
+            </header>
+
+
+            <section class="panel">
+
+                <div class="panel-heading">
+                    <h2>Create New Workflow</h2>
+                </div>
+
+                <form action="/create-workflow" method="POST"
+                      class="workflow-form">
+
+                    <label for="name">Workflow Name</label>
+                    <input type="text" id="name" name="name"
+                           placeholder="e.g. Daily File Organizer" required>
+
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description"
+                              placeholder="What should this workflow do?"
+                              required></textarea>
+
+                    <label for="type">Automation Type</label>
+                    <select id="type" name="type" required>
+                        <option value="">Choose a type</option>
+                        <option value="File Management">File Management</option>
+                        <option value="Productivity">Productivity</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <button type="submit" class="create-btn">
+                        Create Workflow
+                    </button>
+
+                </form>
+
+            </section>
+
+
+            <section class="panel workflow-list-panel">
+                <div class="panel-heading">
+                    <h2>Saved Workflows</h2>
+                </div>
+
+                {% if workflows %}
+
+                    {% for workflow in workflows %}
+
+                    <div class="workflow-item">
+                        <div>
+                            <h3>{{ workflow.name }}</h3>
+                            <p>{{ workflow.description }}</p>
+                            <span>{{ workflow.type }}</span>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-state">
+                        <h3>No workflows created</h3>
+                        <p>Your workflows will appear here.</p>
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
