@@ -1,5 +1,6 @@
 
 import os
+import shutil
 
 FILE_CATEGORIES = {
     "Images": [".jpg", ".jpeg", ".png", ".gif", ".webp"],
@@ -46,3 +47,39 @@ def scan_folder(folder_path):
             })
 
     return preview
+
+
+def organize_folder(folder_path):
+
+    preview = scan_folder(folder_path)
+
+    moved_files = 0
+
+    for file in preview:
+
+        filename = file["filename"]
+        category = file["category"]
+
+        source = os.path.join(folder_path, filename)
+
+        destination_folder = os.path.join(
+            folder_path,
+            category
+        )
+
+        os.makedirs(destination_folder, exist_ok=True)
+
+        destination = os.path.join(
+            destination_folder,
+            filename
+        )
+
+        # Avoid overwriting existing files
+        if os.path.exists(destination):
+            continue
+
+        shutil.move(source, destination)
+
+        moved_files += 1
+
+    return moved_files
