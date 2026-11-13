@@ -51,8 +51,19 @@
                 <p>Scan and organize your files intelligently.</p>
             </div>
         </header>
+        {% if message %}
+            <div class="success-message">
+                {{ message }}
+            </div>
+        {% endif %}
 
+        {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+        {% endif %}
 
+    
         <section class="panel">
 
             <h2>Select a Folder</h2>
@@ -113,6 +124,23 @@
                     <h3>No files found</h3>
                     <p>This folder appears to be empty.</p>
                 </div>
+
+            {% endif %}
+            {% if preview %}
+
+                <form action="/organize-folder" method="POST">
+
+                    <input
+                        type="hidden"
+                        name="folder_path"
+                        value="{{ folder_path }}"
+                    >
+
+                    <button type="submit" class="create-btn">
+                        Organize Files
+                    </button>
+
+                </form>
 
             {% endif %}
 

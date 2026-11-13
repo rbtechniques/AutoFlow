@@ -294,3 +294,21 @@ body {
 .workflow-item p {
     margin-top: 8px;
 }
+
+
+.success-message {
+    background: #123d2c;
+    color: #75e0a5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.error-message {
+    background: #401d24;
+    color: #ff929d;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+

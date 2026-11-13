@@ -5,6 +5,8 @@ from storage import init_db, add_workflow, get_workflows
 
 from organizer import scan_folder
 
+from organizer import scan_folder, organize_folder
+
 app = Flask(__name__)
 
 # Create the database table if it doesn't exist
@@ -58,8 +60,53 @@ def scan_folder_page():
 
     return render_template(
         "organizer.html",
-        preview=preview
+        preview=preview,
+        folder_path=folder_path
     )
+
+@app.route("/organize-folder", methods=["POST"])
+def organize_folder_page():
+
+    folder_path = request.form.get("folder_path", "").strip()
+
+    try:
+        moved_files = organize_folder(folder_path)
+
+        return render_template(
+            "organizer.html",
+            preview=None,
+            message=f"Successfully organized {moved_files} files!"
+        )
+
+    except (ValueError, OSError) as error:
+
+        return render_template(
+            "organizer.html",
+            preview=None,
+            error=str(error)
+        )
+
+@app.route("/organize-folder", methods=["POST"])
+def organize_folder_page():
+
+    folder_path = request.form.get("folder_path", "").strip()
+
+    try:
+        moved_files = organize_folder(folder_path)
+
+        return render_template(
+            "organizer.html",
+            preview=None,
+            message=f"Successfully organized {moved_files} files!"
+        )
+
+    except (ValueError, OSError) as error:
+
+        return render_template(
+            "organizer.html",
+            preview=None,
+            error=str(error)
+        )
 
 if __name__ == "__main__":
     app.run(debug=True)
