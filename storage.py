@@ -39,6 +39,19 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS schedules (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                workflow_id INTEGER NOT NULL,
+                schedule_type TEXT NOT NULL,
+                run_at TEXT,
+                run_time TEXT,
+                day_of_week INTEGER,
+                is_active INTEGER DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (workflow_id) REFERENCES workflows(id)
+            )
+        """)
 
 
 
@@ -119,3 +132,38 @@ def get_workflow_by_id(workflow_id):
         ).fetchone()
 
     return dict(row) if row else None
+
+def add_schedule(workflow_id, schedule_type, run_at=None,
+                 run_time=None, day_of_week=None):
+
+    with get_connection() as connection:
+
+        connection.execute("""
+            INSERT INTO schedules
+            (workflow_id, schedule_type, run_at,
+             run_time, day_of_week)
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            workflow_id,
+            schedule_type,
+            run_at,
+            run_time,
+            day_of_week
+        ))
+
+def get_schedules():
+
+    with get_connection() as connection:
+
+        rows = connection.execute("""
+            SELECT
+                schedules.*,
+                workflows.name AS workflow_name
+            FROM schedules
+            JOIN workflows
+            ON schedules.workflow_id = workflows.id
+            ORDER BY schedules.id DESC
+        """).fetchall()
+
+    return [dict(row) for row in rows]
+
