@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,121 +13,170 @@
 
 <body>
 
-    <div class="app-container">
+<div class="dashboard">
 
-        <!-- Sidebar -->
-        <aside class="sidebar">
+    <!-- Sidebar -->
+    <aside class="sidebar">
 
-            <div class="logo">
-                <h2>Auto<span>Flow.</span></h2>
+        <h2 class="brand">AutoFlow<span>.</span></h2>
+
+        <nav class="sidebar-nav">
+
+            <p class="nav-heading">WORKSPACE</p>
+
+            <a href="/" class="nav-link active" aria-current="page">
+                <span>⌂</span> Dashboard
+            </a>
+
+            <a href="/workflows" class="nav-link">
+                <span>⚙</span> Workflows
+            </a>
+
+            <a href="/organizer" class="nav-link">
+                <span>▣</span> File Organizer
+            </a>
+
+            <a href="/scheduler" class="nav-link">
+                <span>◷</span> Scheduler
+            </a>
+
+            <p class="nav-heading">MANAGEMENT</p>
+
+            <a href="/history" class="nav-link">
+                <span>◴</span> Automation History
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p>AutoFlow v1.0</p>
+            <span>Personal Automation Studio</span>
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back! Here's your automation overview.</p>
             </div>
 
-            <nav>
-                <p class="nav-heading">WORKSPACE</p>
+            <a href="/workflows" class="create-btn"
+               style="text-decoration:none;">
+                + Create Workflow
+            </a>
 
-                <a href="/" class="nav-link active">Dashboard</a>
-                <a href="#" class="nav-link">My Workflows</a>
-                <a href="#" class="nav-link">File Organizer</a>
-                <a href="#" class="nav-link">Scheduler</a>
+        </header>
 
-                <p class="nav-heading">MANAGEMENT</p>
 
-                <a href="#" class="nav-link">Automation History</a>
-                <a href="#" class="nav-link">Settings</a>
-            </nav>
+        <!-- Statistics -->
+        <section class="stats-grid">
 
-            <div class="sidebar-bottom">
-                <p>AutoFlow v1.0</p>
-                <span>Personal Automation Studio</span>
+            <div class="stat-card">
+                <p>Total Workflows</p>
+                <h2>{{ stats.total_workflows }}</h2>
+                <span>Saved workflows</span>
             </div>
 
-        </aside>
+            <div class="stat-card">
+                <p>Automation Runs</p>
+                <h2>{{ stats.total_runs }}</h2>
+                <span>Total executions recorded</span>
+            </div>
+
+            <div class="stat-card">
+                <p>Files Organized</p>
+                <h2>{{ stats.files_organized }}</h2>
+                <span>Files processed successfully</span>
+            </div>
+
+            <div class="stat-card">
+                <p>Last Automation Run</p>
+                <h2 style="font-size:18px;">
+                    {{ stats.last_run[:16] if stats.last_run else "Never" }}
+                </h2>
+                <span>Most recent activity</span>
+            </div>
+
+        </section>
 
 
-        <!-- Main Content -->
-        <main class="main-content">
+        <!-- Dashboard Sections -->
+        <section class="dashboard-grid">
 
-            <header class="topbar">
+            <div class="panel">
 
-                <div>
-                    <h1>Dashboard</h1>
-                    <p>Welcome back! Here's your automation overview.</p>
+                <div class="panel-heading">
+                    <h2>Recent Workflows</h2>
+                    <a href="/workflows">View all</a>
                 </div>
 
-                <button class="create-btn">
-                    + Create Workflow
-                </button>
+                {% if workflows %}
 
-            </header>
+                    {% for workflow in workflows[:5] %}
 
+                        <div class="workflow-item">
 
-            <!-- Statistics -->
-            
-            <section class="stats-grid">
+                            <h3>{{ workflow.name }}</h3>
 
-                <div class="stat-card">
-                    <p>Total Workflows</p>
-                    <h2>{{ stats.total_workflows }}</h2>
-                    <span>Saved workflows</span>
-                </div>
+                            <p>{{ workflow.description }}</p>
 
-                <div class="stat-card">
-                    <p>Automation Runs</p>
-                    <h2>{{ stats.total_runs }}</h2>
-                    <span>Total executions recorded</span>
-                </div>
+                            <span>{{ workflow.type }}</span>
 
-                <div class="stat-card">
-                    <p>Files Organized</p>
-                    <h2>{{ stats.files_organized }}</h2>
-                    <span>Files processed successfully</span>
-                </div>
+                        </div>
 
-                <div class="stat-card">
-                    <p>Last Automation Run</p>
-                    <h2 style="font-size: 18px;">
-                        {{ stats.last_run[:16] if stats.last_run else "Never" }}
-                    </h2>
-                    <span>Most recent activity</span>
-                </div>
+                    {% endfor %}
 
-            </section>
-
-
-
-            <!-- Main Dashboard Sections -->
-            <section class="dashboard-grid">
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h2>Recent Workflows</h2>
-                        <a href="#">View all</a>
-                    </div>
+                {% else %}
 
                     <div class="empty-state">
                         <h3>No workflows yet</h3>
                         <p>Your created automations will appear here.</p>
                     </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-heading">
+                    <h2>Quick Actions</h2>
                 </div>
 
+                <div class="quick-actions">
 
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h2>Quick Actions</h2>
-                    </div>
+                    <button onclick="window.location.href='/organizer'">
+                        ▣ &nbsp; Organize Files
+                    </button>
 
-                    <div class="quick-actions">
-                        <button>Organize Files</button>
-                        <button>Create Workflow</button>
-                        <button>View History</button>
-                    </div>
+                    <button onclick="window.location.href='/workflows'">
+                        + &nbsp; Create Workflow
+                    </button>
+
+                    <button onclick="window.location.href='/history'">
+                        ◴ &nbsp; View History
+                    </button>
+
+                    <button onclick="window.location.href='/scheduler'">
+                        ◷ &nbsp; Manage Scheduler
+                    </button>
+
                 </div>
 
-            </section>
+            </div>
 
-        </main>
+        </section>
 
-    </div>
+    </main>
+
+</div>
 
 </body>
 </html>

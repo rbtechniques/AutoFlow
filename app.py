@@ -21,11 +21,10 @@ init_db()
 @app.route("/")
 def home():
 
-    stats = get_dashboard_stats()
-
     return render_template(
         "index.html",
-        stats=stats
+        stats = get_dashboard_stats(),
+        workflows = get_workflows()
     )
 
 

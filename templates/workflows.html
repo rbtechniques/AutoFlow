@@ -9,74 +9,109 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-{% if message %}
-    <div class="success-message">
-        {{ message }}
-    </div>
-{% endif %}
 
-{% if error %}
-    <div class="error-message">
-        {{ error }}
-    </div>
-{% endif %}
 <body>
 
-    <div class="app-container">
+    <div class="dashboard">
 
+        <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="logo">
-                <h2>Auto<span>Flow.</span></h2>
-            </div>
 
-            <nav>
-                <p class="nav-heading">WORKSPACE</p>
-                <a href="/" class="nav-link">Dashboard</a>
-                <a href="/workflows" class="nav-link active">My Workflows</a>
-                <a href="#" class="nav-link">File Organizer</a>
-                <a href="#" class="nav-link">Scheduler</a>
+            <h2 class="brand">AutoFlow<span>.</span></h2>
 
-                <p class="nav-heading">MANAGEMENT</p>
-                <a href="#" class="nav-link">Automation History</a>
-                <a href="#" class="nav-link">Settings</a>
+            <nav class="sidebar-nav">
+
+                <a href="/" class="nav-link">
+                    <span>▦</span> Dashboard
+                </a>
+
+                <a href="/workflows" class="nav-link active"
+                   aria-current="page">
+                    <span>⚙</span> My Workflows
+                </a>
+
+                <a href="/organizer" class="nav-link">
+                    <span>▤</span> File Organizer
+                </a>
+
+                <a href="/scheduler" class="nav-link">
+                    <span>◷</span> Scheduler
+                </a>
+
+                <a href="/history" class="nav-link">
+                    <span>◴</span> Automation History
+                </a>
+
             </nav>
 
             <div class="sidebar-bottom">
                 <p>AutoFlow v1.0</p>
                 <span>Personal Automation Studio</span>
             </div>
+
         </aside>
 
 
+        <!-- Main Content -->
         <main class="main-content">
 
             <header class="topbar">
                 <div>
                     <h1>My Workflows</h1>
-                    <p>Create and manage your personal automations.</p>
+                    <p>Create, manage and run your personal automations.</p>
                 </div>
             </header>
 
 
+            <!-- Flash Messages -->
+            {% if message %}
+                <div class="success-message">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div class="error-message">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+
+            <!-- Create Workflow -->
             <section class="panel">
 
                 <div class="panel-heading">
                     <h2>Create New Workflow</h2>
+                    <p>Set up a new automation for your workspace.</p>
                 </div>
 
-                <form action="/create-workflow" method="POST"
+                <form action="/create-workflow"
+                      method="POST"
                       class="workflow-form">
 
                     <label for="name">Workflow Name</label>
-                    <input type="text" id="name" name="name"
-                           placeholder="e.g. Daily File Organizer" required>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="e.g. Daily File Organizer"
+                        required
+                    >
+
 
                     <label for="description">Description</label>
-                    <textarea id="description" name="description"
-                              placeholder="What should this workflow do?"
-                              required></textarea>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Describe what this workflow should do..."
+                        required
+                    ></textarea>
+
 
                     <label for="type">Automation Type</label>
+
                     <select id="type" name="type" required>
                         <option value="">Choose a type</option>
                         <option value="File Management">File Management</option>
@@ -84,8 +119,9 @@
                         <option value="Other">Other</option>
                     </select>
 
+
                     <button type="submit" class="create-btn">
-                        Create Workflow
+                        + Create Workflow
                     </button>
 
                 </form>
@@ -93,57 +129,74 @@
             </section>
 
 
+            <!-- Saved Workflows -->
             <section class="panel workflow-list-panel">
+
                 <div class="panel-heading">
                     <h2>Saved Workflows</h2>
+                    <p>Your existing automations appear here.</p>
                 </div>
+
 
                 {% if workflows %}
 
-                    {% for workflow in workflows %}
+                    <div class="workflow-list">
 
-                    <div class="workflow-item">
-                        <div>
-                            <h3>{{ workflow.name }}</h3>
+                        {% for workflow in workflows %}
 
-                            <p>{{ workflow.description }}</p>
+                            <div class="workflow-item">
 
-                            <span>{{ workflow.type }}</span>
-                        </div>
+                                <div class="workflow-info">
 
-                        <form action="/run-workflow" method="POST"
-                            class="run-workflow-form">
+                                    <h3>{{ workflow.name }}</h3>
 
-                            <input type="hidden"
-                                name="workflow_id"
-                                value="{{ workflow.id }}">
+                                    <p>{{ workflow.description }}</p>
 
-                            {% if workflow.type == "File Management" %}
+                                    <span class="workflow-type">
+                                        {{ workflow.type }}
+                                    </span>
 
-                                <input
-                                    type="text"
-                                    name="folder_path"
-                                    placeholder="Enter folder path"
-                                    required
-                                >
+                                </div>
 
-                            {% endif %}
 
-                            <button type="submit" class="create-btn">
-                                Run Workflow
-                            </button>
+                                <form action="/run-workflow"
+                                      method="POST"
+                                      class="run-workflow-form">
 
-                        </form>
+                                    <input
+                                        type="hidden"
+                                        name="workflow_id"
+                                        value="{{ workflow.id }}"
+                                    >
+
+                                    {% if workflow.type == "File Management" %}
+
+                                        <input
+                                            type="text"
+                                            name="folder_path"
+                                            placeholder="Enter folder path"
+                                            required
+                                        >
+
+                                    {% endif %}
+
+                                    <button type="submit" class="create-btn">
+                                        Run Workflow →
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        {% endfor %}
 
                     </div>
-
-                    {% endfor %}
 
                 {% else %}
 
                     <div class="empty-state">
-                        <h3>No workflows created</h3>
-                        <p>Your workflows will appear here.</p>
+                        <h3>No workflows created yet</h3>
+                        <p>Create your first workflow using the form above.</p>
                     </div>
 
                 {% endif %}

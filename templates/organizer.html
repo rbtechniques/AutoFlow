@@ -13,144 +13,174 @@
 
 <body>
 
-<div class="app-container">
+    <div class="dashboard">
 
-    <aside class="sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar">
 
-        <div class="logo">
-            <h2>Auto<span>Flow.</span></h2>
-        </div>
+            <h2 class="brand">AutoFlow<span>.</span></h2>
 
-        <nav>
-            <p class="nav-heading">WORKSPACE</p>
+            <nav class="sidebar-nav">
 
-            <a href="/" class="nav-link">Dashboard</a>
-            <a href="/workflows" class="nav-link">My Workflows</a>
-            <a href="/organizer" class="nav-link active">File Organizer</a>
-            <a href="#" class="nav-link">Scheduler</a>
+                <a href="/" class="nav-link">
+                    <span>▦</span> Dashboard
+                </a>
 
-            <p class="nav-heading">MANAGEMENT</p>
+                <a href="/workflows" class="nav-link">
+                    <span>⚙</span> My Workflows
+                </a>
 
-            <a href="#" class="nav-link">Automation History</a>
-            <a href="#" class="nav-link">Settings</a>
-        </nav>
+                <a href="/organizer" class="nav-link active"
+                   aria-current="page">
+                    <span>▤</span> File Organizer
+                </a>
 
-        <div class="sidebar-bottom">
-            <p>AutoFlow v1.0</p>
-            <span>Personal Automation Studio</span>
-        </div>
+                <a href="/scheduler" class="nav-link">
+                    <span>◷</span> Scheduler
+                </a>
 
-    </aside>
+                <a href="/history" class="nav-link">
+                    <span>◴</span> Automation History
+                </a>
 
+            </nav>
 
-    <main class="main-content">
-
-        <header class="topbar">
-            <div>
-                <h1>File Organizer</h1>
-                <p>Scan and organize your files intelligently.</p>
-            </div>
-        </header>
-        {% if message %}
-            <div class="success-message">
-                {{ message }}
-            </div>
-        {% endif %}
-
-        {% if error %}
-            <div class="error-message">
-                {{ error }}
-            </div>
-        {% endif %}
-
-    
-        <section class="panel">
-
-            <h2>Select a Folder</h2>
-
-            <p class="organizer-description">
-                Enter the full path of the folder you want to scan.
-            </p>
-
-            <form action="/scan-folder" method="POST"
-                  class="workflow-form">
-
-                <label for="folder_path">Folder Path</label>
-
-                <input
-                    type="text"
-                    id="folder_path"
-                    name="folder_path"
-                    placeholder="C:\Users\YourName\Downloads"
-                    required
-                >
-
-                <button type="submit" class="create-btn">
-                    Scan Folder
-                </button>
-
-            </form>
-
-        </section>
-
-
-        {% if preview is not none %}
-
-        <section class="panel workflow-list-panel">
-
-            <div class="panel-heading">
-                <h2>Scan Preview</h2>
+            <div class="sidebar-bottom">
+                <p>AutoFlow v1.0</p>
+                <span>Personal Automation Studio</span>
             </div>
 
-            <p class="organizer-description">
-                Found {{ preview|length }} files.
-                No files have been moved.
-            </p>
+        </aside>
 
-            {% if preview %}
 
-                {% for file in preview %}
+        <!-- Main Content -->
+        <main class="main-content">
 
-                <div class="workflow-item">
-                    <h3>{{ file.filename }}</h3>
-                    <p>Category: {{ file.category }}</p>
+            <header class="topbar">
+                <div>
+                    <h1>File Organizer</h1>
+                    <p>Scan, preview and organize your files intelligently.</p>
                 </div>
+            </header>
 
-                {% endfor %}
 
-            {% else %}
-
-                <div class="empty-state">
-                    <h3>No files found</h3>
-                    <p>This folder appears to be empty.</p>
+            <!-- Flash Messages -->
+            {% if message %}
+                <div class="success-message">
+                    {{ message }}
                 </div>
-
             {% endif %}
-            {% if preview %}
 
-                <form action="/organize-folder" method="POST">
+            {% if error %}
+                <div class="error-message">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+
+            <!-- Folder Selection -->
+            <section class="panel">
+
+                <div class="panel-heading">
+                    <h2>Select a Folder</h2>
+                    <p>Choose the folder you want AutoFlow to organize.</p>
+                </div>
+
+                <form action="/scan-folder"
+                      method="POST"
+                      class="workflow-form">
+
+                    <label for="folder_path">Folder Path</label>
 
                     <input
-                        type="hidden"
+                        type="text"
+                        id="folder_path"
                         name="folder_path"
-                        value="{{ folder_path }}"
+                        placeholder="C:\Users\YourName\Downloads"
+                        required
                     >
 
                     <button type="submit" class="create-btn">
-                        Organize Files
+                        Scan Folder →
                     </button>
 
                 </form>
 
+            </section>
+
+
+            <!-- Scan Preview -->
+            {% if preview is not none %}
+
+                <section class="panel workflow-list-panel">
+
+                    <div class="panel-heading">
+                        <h2>Scan Preview</h2>
+                        <p>Review the files before organizing them.</p>
+                    </div>
+
+                    <div class="organizer-summary">
+                        <h3>{{ preview|length }} Files Found</h3>
+                        <p>No files have been moved yet.</p>
+                    </div>
+
+
+                    {% if preview %}
+
+                        <div class="workflow-list">
+
+                            {% for file in preview %}
+
+                                <div class="workflow-item">
+
+                                    <div class="workflow-info">
+                                        <h3>{{ file.filename }}</h3>
+
+                                        <span class="workflow-type">
+                                            {{ file.category }}
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- Organize Button -->
+                        <form action="/organize-folder"
+                              method="POST"
+                              class="organize-action-form">
+
+                            <input
+                                type="hidden"
+                                name="folder_path"
+                                value="{{ folder_path }}"
+                            >
+
+                            <button type="submit" class="create-btn">
+                                Organize Files →
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        <div class="empty-state">
+                            <h3>No files found</h3>
+                            <p>This folder appears to be empty.</p>
+                        </div>
+
+                    {% endif %}
+
+                </section>
+
             {% endif %}
 
-        </section>
+        </main>
 
-        {% endif %}
-
-    </main>
-
-</div>
+    </div>
 
 </body>
 </html>
