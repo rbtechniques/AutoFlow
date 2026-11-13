@@ -86,27 +86,5 @@ def organize_folder_page():
             error=str(error)
         )
 
-@app.route("/organize-folder", methods=["POST"])
-def organize_folder_page():
-
-    folder_path = request.form.get("folder_path", "").strip()
-
-    try:
-        moved_files = organize_folder(folder_path)
-
-        return render_template(
-            "organizer.html",
-            preview=None,
-            message=f"Successfully organized {moved_files} files!"
-        )
-
-    except (ValueError, OSError) as error:
-
-        return render_template(
-            "organizer.html",
-            preview=None,
-            error=str(error)
-        )
-
 if __name__ == "__main__":
     app.run(debug=True)
