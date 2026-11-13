@@ -276,3 +276,21 @@ body {
     color: #817aff;
     font-size: 12px;
 }
+
+
+/* File Organizer */
+
+.organizer-description {
+    color: #9aa5b8;
+    font-size: 14px;
+    margin: 15px 0 20px;
+}
+
+.workflow-item h3 {
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.workflow-item p {
+    margin-top: 8px;
+}

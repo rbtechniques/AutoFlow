@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>File Organizer | AutoFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>Auto<span>Flow.</span></h2>
+        </div>
+
+        <nav>
+            <p class="nav-heading">WORKSPACE</p>
+
+            <a href="/" class="nav-link">Dashboard</a>
+            <a href="/workflows" class="nav-link">My Workflows</a>
+            <a href="/organizer" class="nav-link active">File Organizer</a>
+            <a href="#" class="nav-link">Scheduler</a>
+
+            <p class="nav-heading">MANAGEMENT</p>
+
+            <a href="#" class="nav-link">Automation History</a>
+            <a href="#" class="nav-link">Settings</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p>AutoFlow v1.0</p>
+            <span>Personal Automation Studio</span>
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1>File Organizer</h1>
+                <p>Scan and organize your files intelligently.</p>
+            </div>
+        </header>
+
+
+        <section class="panel">
+
+            <h2>Select a Folder</h2>
+
+            <p class="organizer-description">
+                Enter the full path of the folder you want to scan.
+            </p>
+
+            <form action="/scan-folder" method="POST"
+                  class="workflow-form">
+
+                <label for="folder_path">Folder Path</label>
+
+                <input
+                    type="text"
+                    id="folder_path"
+                    name="folder_path"
+                    placeholder="C:\Users\YourName\Downloads"
+                    required
+                >
+
+                <button type="submit" class="create-btn">
+                    Scan Folder
+                </button>
+
+            </form>
+
+        </section>
+
+
+        {% if preview is not none %}
+
+        <section class="panel workflow-list-panel">
+
+            <div class="panel-heading">
+                <h2>Scan Preview</h2>
+            </div>
+
+            <p class="organizer-description">
+                Found {{ preview|length }} files.
+                No files have been moved.
+            </p>
+
+            {% if preview %}
+
+                {% for file in preview %}
+
+                <div class="workflow-item">
+                    <h3>{{ file.filename }}</h3>
+                    <p>Category: {{ file.category }}</p>
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-state">
+                    <h3>No files found</h3>
+                    <p>This folder appears to be empty.</p>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+</body>
+</html>
