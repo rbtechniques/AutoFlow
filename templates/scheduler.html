@@ -50,20 +50,30 @@
 
                 <label>Select Workflow</label>
 
-                <select name="workflow_id" required>
+                <label>Select Workflow</label>
+
+                <select name="workflow_id" id="workflow_id" required>
                     {% for workflow in workflows %}
-                        <option value="{{ workflow.id }}">
+                        <option
+                            value="{{ workflow.id }}"
+                            data-type="{{ workflow.type }}"
+                        >
                             {{ workflow.name }}
                         </option>
                     {% endfor %}
                 </select>
-                <label>Folder Path (for File Management workflows)</label>
+                <div id="folder_path_field" style="display:none;">
+
+                <label>Folder Path</label>
 
                 <input
                     type="text"
                     name="folder_path"
-                    placeholder="Example: C:\Users\YourName\Documents"
+                    id="folder_path"
+                    placeholder="C:\Users\YourName\Documents"
                 >
+
+                </div>
                 <label>Schedule Type</label>
 
                 <select name="schedule_type" id="schedule_type" required>
@@ -217,6 +227,38 @@ function updateScheduleFields() {
 scheduleType.addEventListener("change", updateScheduleFields);
 
 updateScheduleFields();
+const workflowSelect = document.getElementById("workflow_id");
+
+const folderPathField =
+    document.getElementById("folder_path_field");
+
+const folderPathInput =
+    document.getElementById("folder_path");
+
+function updateFolderField() {
+
+    const selectedOption =
+        workflowSelect.options[workflowSelect.selectedIndex];
+
+    const workflowType =
+        selectedOption.dataset.type;
+
+    const needsFolder =
+        workflowType === "File Management";
+
+    folderPathField.style.display =
+        needsFolder ? "block" : "none";
+
+    folderPathInput.required = needsFolder;
+
+    if (!needsFolder) {
+        folderPathInput.value = "";
+    }
+}
+
+workflowSelect.addEventListener("change", updateFolderField);
+
+updateFolderField();
 </script>
 
 </body>

@@ -9,6 +9,7 @@ scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
 
 
 def run_scheduled_workflow(schedule_id):
+    print(f"[AUTOFLOW] Executing schedule ID: {schedule_id}")
 
     schedules = get_schedules()
 
@@ -48,6 +49,7 @@ def run_scheduled_workflow(schedule_id):
 
 
 def load_schedules():
+    print("[AUTOFLOW] Loading schedules...")
 
     for schedule in get_schedules():
 
@@ -108,8 +110,18 @@ def start_scheduler():
 
     if not scheduler.running:
 
+        print("\n[AUTOFLOW] Starting scheduler...")
+
         load_schedules()
+
         scheduler.start()
+
+        print("[AUTOFLOW] Scheduler started successfully!")
+
+        print("[AUTOFLOW] Registered jobs:")
+
+        for job in scheduler.get_jobs():
+            print(job)
 
 def refresh_schedules():
 
