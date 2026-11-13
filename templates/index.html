@@ -63,33 +63,37 @@
 
 
             <!-- Statistics -->
+            
             <section class="stats-grid">
 
                 <div class="stat-card">
                     <p>Total Workflows</p>
-                    <h2>0</h2>
-                    <span>No workflows created yet</span>
+                    <h2>{{ stats.total_workflows }}</h2>
+                    <span>Saved workflows</span>
                 </div>
 
                 <div class="stat-card">
-                    <p>Active Automations</p>
-                    <h2>0</h2>
-                    <span>Currently running</span>
+                    <p>Automation Runs</p>
+                    <h2>{{ stats.total_runs }}</h2>
+                    <span>Total executions recorded</span>
                 </div>
 
                 <div class="stat-card">
-                    <p>Tasks Completed</p>
-                    <h2>0</h2>
-                    <span>Across all workflows</span>
+                    <p>Files Organized</p>
+                    <h2>{{ stats.files_organized }}</h2>
+                    <span>Files processed successfully</span>
                 </div>
 
                 <div class="stat-card">
-                    <p>Time Saved</p>
-                    <h2>0 min</h2>
-                    <span>Estimated time saved</span>
+                    <p>Last Automation Run</p>
+                    <h2 style="font-size: 18px;">
+                        {{ stats.last_run[:16] if stats.last_run else "Never" }}
+                    </h2>
+                    <span>Most recent activity</span>
                 </div>
 
             </section>
+
 
 
             <!-- Main Dashboard Sections -->
