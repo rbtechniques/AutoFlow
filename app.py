@@ -1,7 +1,7 @@
 
 from flask import Flask, render_template, request, redirect
 
-from storage import init_db, add_workflow, get_workflows, add_history, get_history, get_dashboard_stats, get_workflow_by_id, add_schedule, get_schedules
+from storage import init_db, add_workflow, get_workflows, add_history, get_history, get_dashboard_stats, get_workflow_by_id, add_schedule, get_schedules, toggle_schedule, delete_schedule
 
 from organizer import scan_folder
 
@@ -157,7 +157,7 @@ def add_schedule_page():
     run_at = request.form.get("run_at")
     run_time = request.form.get("run_time")
     day_of_week = request.form.get("day_of_week")
-
+    folder_path = request.form.get("folder_path", "").strip() or None
     try:
         workflow_id = int(workflow_id)
 
@@ -169,7 +169,8 @@ def add_schedule_page():
             add_schedule(
                workflow_id,
                schedule_type,
-               run_at=run_at
+               run_at=run_at,
+               folder_path=folder_path
            ) 
         elif schedule_type == "Daily":
             if not run_time:
@@ -177,7 +178,8 @@ def add_schedule_page():
             add_schedule(
                 workflow_id,
                 schedule_type,
-                run_time=run_time
+                run_time=run_time,
+                folder_path=folder_path
             )
         elif schedule_type == "Weekly":
             if not run_time or not day_of_week:
@@ -186,7 +188,8 @@ def add_schedule_page():
                 workflow_id,
                 schedule_type,
                 run_time=run_time,
-                day_of_week=day_of_week
+                day_of_week=day_of_week,
+                folder_path=folder_path
             )
         else:
             raise ValueError("Invalid schedule type selected.")
@@ -199,15 +202,6 @@ def add_schedule_page():
             error=str(error)
         )
 
-    workflow = get_workflow_by_id(workflow_id)
-
-    if not workflow:
-        return redirect("/scheduler")
-
-    add_schedule(workflow_id, schedule_type, run_at, run_time, day_of_week)
-
-    return redirect("/scheduler")
-
 @app.route("/scheduler")
 def scheduler_page():
 
@@ -216,6 +210,24 @@ def scheduler_page():
         workflows=get_workflows(),
         schedules=get_schedules()
     )
+
+@app.route("/toggle-schedule/<int:schedule_id>", methods=["POST"])
+def toggle_schedule_page(schedule_id):
+
+    schedule_id = request.view_args["schedule_id"]
+
+    toggle_schedule(schedule_id)
+
+    return redirect("/scheduler")
+
+
+@app.route("/delete-schedule/<int:schedule_id>", methods=["POST"])
+def delete_schedule_page(schedule_id):
+    schedule_id = request.view_args["schedule_id"]
+
+    delete_schedule(schedule_id)
+
+    return redirect("/scheduler")
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -57,7 +57,13 @@
                         </option>
                     {% endfor %}
                 </select>
+                <label>Folder Path (for File Management workflows)</label>
 
+                <input
+                    type="text"
+                    name="folder_path"
+                    placeholder="Example: C:\Users\YourName\Documents"
+                >
                 <label>Schedule Type</label>
 
                 <select name="schedule_type" id="schedule_type" required>
@@ -148,6 +154,26 @@
                         <span class="schedule-status">
                             {{ "Active" if schedule.is_active else "Disabled" }}
                         </span>
+                        <div class="schedule-actions">
+
+                            <form action="/toggle-schedule/{{ schedule.id }}" method="POST">
+
+                                <button type="submit" class="schedule-toggle-btn">
+                                    {{ "Disable" if schedule.is_active else "Enable" }}
+                                </button>
+
+                            </form>
+
+                            <form action="/delete-schedule/{{ schedule.id }}" method="POST"
+                                onsubmit="return confirm('Delete this schedule?');">
+
+                                <button type="submit" class="schedule-delete-btn">
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
 
                     </div>
 

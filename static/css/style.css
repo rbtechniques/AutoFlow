@@ -498,3 +498,26 @@ body {
         padding: 18px;
     }
 }
+.schedule-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.schedule-actions button {
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.schedule-toggle-btn {
+    background: #263653;
+    color: #a5b4fc;
+}
+
+.schedule-delete-btn {
+    background: #3b2028;
+    color: #f87171;
+}

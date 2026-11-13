@@ -51,6 +51,17 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (workflow_id) REFERENCES workflows(id)
             )
+            columns = [
+                row["name"]
+                for row in connection.execute(
+                    "PRAGMA table_info(schedules)"
+                ).fetchall()
+            ]
+
+            if "folder_path" not in columns:
+                connection.execute(
+                    "ALTER TABLE schedules ADD COLUMN folder_path TEXT"
+                )
         """)
 
 
@@ -134,21 +145,22 @@ def get_workflow_by_id(workflow_id):
     return dict(row) if row else None
 
 def add_schedule(workflow_id, schedule_type, run_at=None,
-                 run_time=None, day_of_week=None):
+                 run_time=None, day_of_week=None, folder_path=None):
 
     with get_connection() as connection:
 
         connection.execute("""
             INSERT INTO schedules
             (workflow_id, schedule_type, run_at,
-             run_time, day_of_week)
-            VALUES (?, ?, ?, ?, ?)
+             run_time, day_of_week,folder_path)
+            VALUES (?, ?, ?, ?, ?, ?)
         """, (
             workflow_id,
             schedule_type,
             run_at,
             run_time,
-            day_of_week
+            day_of_week,
+            folder_path
         ))
 
 def get_schedules():
@@ -167,3 +179,25 @@ def get_schedules():
 
     return [dict(row) for row in rows]
 
+def toggle_schedule(schedule_id):
+
+    with get_connection() as connection:
+
+        connection.execute("""
+            UPDATE schedules
+            SET is_active = CASE
+                WHEN is_active = 1 THEN 0
+                ELSE 1
+            END
+            WHERE id = ?
+        """, (schedule_id,))
+
+
+def delete_schedule(schedule_id):
+
+    with get_connection() as connection:
+
+        connection.execute("""
+            DELETE FROM schedules
+            WHERE id = ?
+        """, (schedule_id,))
