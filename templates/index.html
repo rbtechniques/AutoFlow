@@ -1,15 +1,130 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AutoFlow | Automation Studio</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
-    <h1>Welcome to AutoFlow</h1>
-    <p>Your personal automation studio.</p>
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <h2>Auto<span>Flow.</span></h2>
+            </div>
+
+            <nav>
+                <p class="nav-heading">WORKSPACE</p>
+
+                <a href="/" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">My Workflows</a>
+                <a href="#" class="nav-link">File Organizer</a>
+                <a href="#" class="nav-link">Scheduler</a>
+
+                <p class="nav-heading">MANAGEMENT</p>
+
+                <a href="#" class="nav-link">Automation History</a>
+                <a href="#" class="nav-link">Settings</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <p>AutoFlow v1.0</p>
+                <span>Personal Automation Studio</span>
+            </div>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Welcome back! Here's your automation overview.</p>
+                </div>
+
+                <button class="create-btn">
+                    + Create Workflow
+                </button>
+
+            </header>
+
+
+            <!-- Statistics -->
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <p>Total Workflows</p>
+                    <h2>0</h2>
+                    <span>No workflows created yet</span>
+                </div>
+
+                <div class="stat-card">
+                    <p>Active Automations</p>
+                    <h2>0</h2>
+                    <span>Currently running</span>
+                </div>
+
+                <div class="stat-card">
+                    <p>Tasks Completed</p>
+                    <h2>0</h2>
+                    <span>Across all workflows</span>
+                </div>
+
+                <div class="stat-card">
+                    <p>Time Saved</p>
+                    <h2>0 min</h2>
+                    <span>Estimated time saved</span>
+                </div>
+
+            </section>
+
+
+            <!-- Main Dashboard Sections -->
+            <section class="dashboard-grid">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h2>Recent Workflows</h2>
+                        <a href="#">View all</a>
+                    </div>
+
+                    <div class="empty-state">
+                        <h3>No workflows yet</h3>
+                        <p>Your created automations will appear here.</p>
+                    </div>
+                </div>
+
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h2>Quick Actions</h2>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button>Organize Files</button>
+                        <button>Create Workflow</button>
+                        <button>View History</button>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
 
 </body>
 </html>
