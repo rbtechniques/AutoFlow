@@ -51,18 +51,19 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (workflow_id) REFERENCES workflows(id)
             )
-            columns = [
-                row["name"]
-                for row in connection.execute(
-                    "PRAGMA table_info(schedules)"
-                ).fetchall()
-            ]
-
-            if "folder_path" not in columns:
-                connection.execute(
-                    "ALTER TABLE schedules ADD COLUMN folder_path TEXT"
-                )
         """)
+        columns = [
+            row["name"]
+            for row in connection.execute(
+                "PRAGMA table_info(schedules)"
+            ).fetchall()
+        ]
+
+        if "folder_path" not in columns:
+            connection.execute(
+                "ALTER TABLE schedules ADD COLUMN folder_path TEXT"
+            )
+        
 
 
 

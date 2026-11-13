@@ -9,6 +9,8 @@ from organizer import scan_folder, organize_folder
 
 from engine import execute_workflow
 
+import os
+from scheduler_engine import start_scheduler, refresh_schedules
 
 app = Flask(__name__)
 
@@ -193,6 +195,7 @@ def add_schedule_page():
             )
         else:
             raise ValueError("Invalid schedule type selected.")
+        refresh_schedules()
         return redirect("/scheduler")
     except (TypeError, ValueError) as error:
         return render_template(
@@ -217,6 +220,7 @@ def toggle_schedule_page(schedule_id):
     schedule_id = request.view_args["schedule_id"]
 
     toggle_schedule(schedule_id)
+    refresh_schedules()
 
     return redirect("/scheduler")
 
@@ -226,8 +230,15 @@ def delete_schedule_page(schedule_id):
     schedule_id = request.view_args["schedule_id"]
 
     delete_schedule(schedule_id)
+    refresh_schedules()
 
     return redirect("/scheduler")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    start_scheduler()
+
+    app.run(
+        debug=True,
+        use_reloader=False
+    )
