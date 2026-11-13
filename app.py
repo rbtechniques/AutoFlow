@@ -1,7 +1,7 @@
 
 from flask import Flask, render_template, request, redirect
 
-from storage import init_db, add_workflow, get_workflows
+from storage import init_db, add_workflow, get_workflows, add_history, get_history
 
 from organizer import scan_folder
 
@@ -71,6 +71,11 @@ def organize_folder_page():
 
     try:
         moved_files = organize_folder(folder_path)
+        add_history(
+        "File Organizer",
+        f"Organized {moved_files} files successfully.",
+        moved_files
+        )
 
         return render_template(
             "organizer.html",
@@ -85,6 +90,15 @@ def organize_folder_page():
             preview=None,
             error=str(error)
         )
+@app.route("/history")
+def history_page():
+
+    history = get_history()
+
+    return render_template(
+        "history.html",
+        history=history
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
