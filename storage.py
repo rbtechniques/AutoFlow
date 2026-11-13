@@ -80,3 +80,31 @@ def get_history():
         ).fetchall()
 
     return [dict(row) for row in rows]
+
+
+def get_dashboard_stats():
+
+    with get_connection() as connection:
+
+        total_workflows = connection.execute(
+            "SELECT COUNT(*) FROM workflows"
+        ).fetchone()[0]
+
+        total_runs = connection.execute(
+            "SELECT COUNT(*) FROM history"
+        ).fetchone()[0]
+
+        files_organized = connection.execute(
+            "SELECT COALESCE(SUM(files_moved), 0) FROM history"
+        ).fetchone()[0]
+
+        last_run = connection.execute(
+            "SELECT MAX(created_at) FROM history"
+        ).fetchone()[0]
+
+    return {
+        "total_workflows": total_workflows,
+        "total_runs": total_runs,
+        "files_organized": files_organized,
+        "last_run": last_run
+    }

@@ -1,7 +1,7 @@
 
 from flask import Flask, render_template, request, redirect
 
-from storage import init_db, add_workflow, get_workflows, add_history, get_history
+from storage import init_db, add_workflow, get_workflows, add_history, get_history, get_dashboard_stats
 
 from organizer import scan_folder
 
@@ -15,7 +15,13 @@ init_db()
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+
+    stats = get_dashboard_stats()
+
+    return render_template(
+        "index.html",
+        stats=stats
+    )
 
 
 @app.route("/workflows")
