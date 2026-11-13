@@ -108,3 +108,14 @@ def get_dashboard_stats():
         "files_organized": files_organized,
         "last_run": last_run
     }
+
+def get_workflow_by_id(workflow_id):
+
+    with get_connection() as connection:
+
+        row = connection.execute(
+            "SELECT * FROM workflows WHERE id = ?",
+            (workflow_id,)
+        ).fetchone()
+
+    return dict(row) if row else None
