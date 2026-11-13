@@ -312,3 +312,39 @@ body {
     margin-bottom: 20px;
 }
 
+
+/* Automation History */
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    background: #202a3b;
+    border: 1px solid #303b50;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.history-info h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.history-info p {
+    color: #9aa5b8;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.history-info span {
+    color: #788399;
+    font-size: 11px;
+}
+
+.history-count {
+    color: #817aff;
+    font-size: 13px;
+    white-space: nowrap;
+}
