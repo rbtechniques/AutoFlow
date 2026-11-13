@@ -14,89 +14,112 @@
 
 <body>
 
-<div class="app-container">
+    <div class="dashboard">
 
-    <aside class="sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar">
 
-        <div class="logo">
-            <h2>Auto<span>Flow.</span></h2>
-        </div>
+            <h2 class="brand">AutoFlow<span>.</span></h2>
 
-        <nav>
-            <p class="nav-heading">WORKSPACE</p>
+            <nav class="sidebar-nav">
 
-            <a href="/" class="nav-link">Dashboard</a>
-            <a href="/workflows" class="nav-link">My Workflows</a>
-            <a href="/organizer" class="nav-link">File Organizer</a>
-            <a href="#" class="nav-link">Scheduler</a>
+                <a href="/" class="nav-link">
+                    <span>▦</span> Dashboard
+                </a>
 
-            <p class="nav-heading">MANAGEMENT</p>
+                <a href="/workflows" class="nav-link">
+                    <span>⚙</span> My Workflows
+                </a>
 
-            <a href="/history" class="nav-link active">
-                Automation History
-            </a>
+                <a href="/organizer" class="nav-link">
+                    <span>▤</span> File Organizer
+                </a>
 
-            <a href="#" class="nav-link">Settings</a>
-        </nav>
+                <a href="/scheduler" class="nav-link">
+                    <span>◷</span> Scheduler
+                </a>
 
-        <div class="sidebar-bottom">
-            <p>AutoFlow v1.0</p>
-            <span>Personal Automation Studio</span>
-        </div>
+                <a href="/history" class="nav-link active"
+                   aria-current="page">
+                    <span>◴</span> Automation History
+                </a>
 
-    </aside>
+            </nav>
 
-
-    <main class="main-content">
-
-        <header class="topbar">
-            <div>
-                <h1>Automation History</h1>
-                <p>Track your previously executed automations.</p>
-            </div>
-        </header>
-
-
-        <section class="panel">
-
-            <div class="panel-heading">
-                <h2>Recent Activity</h2>
+            <div class="sidebar-bottom">
+                <p>AutoFlow v1.0</p>
+                <span>Personal Automation Studio</span>
             </div>
 
-            {% if history %}
+        </aside>
 
-                {% for item in history %}
 
-                <div class="history-item">
+        <!-- Main Content -->
+        <main class="main-content">
 
-                    <div class="history-info">
-                        <h3>{{ item.action }}</h3>
-                        <p>{{ item.details }}</p>
-                        <span>{{ item.created_at }}</span>
-                    </div>
+            <header class="topbar">
+                <div>
+                    <h1>Automation History</h1>
+                    <p>Track and review your previously executed automations.</p>
+                </div>
+            </header>
 
-                    <div class="history-count">
-                        {{ item.files_moved }} files
-                    </div>
 
+            <!-- History Section -->
+            <section class="panel">
+
+                <div class="panel-heading">
+                    <h2>Recent Activity</h2>
+                    <p>A record of your automation activity.</p>
                 </div>
 
-                {% endfor %}
 
-            {% else %}
+                {% if history %}
 
-                <div class="empty-state">
-                    <h3>No activity yet</h3>
-                    <p>Your automation history will appear here.</p>
-                </div>
+                    <div class="history-list">
 
-            {% endif %}
+                        {% for item in history %}
 
-        </section>
+                            <div class="history-item">
 
-    </main>
+                                <div class="history-info">
 
-</div>
+                                    <h3>{{ item.action }}</h3>
+
+                                    <p>{{ item.details }}</p>
+
+                                    <span class="history-date">
+                                        {{ item.created_at }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="history-count">
+                                    <strong>{{ item.files_moved }}</strong>
+                                    <span>Files</span>
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+                        <h3>No activity yet</h3>
+                        <p>Your automation history will appear here once you run a workflow or organize files.</p>
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        </main>
+
+    </div>
 
 </body>
 </html>
