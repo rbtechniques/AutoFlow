@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoFlow - Scheduler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+        <h2>AutoFlow</h2>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/workflows">Workflows</a>
+            <a href="/organizer">File Organizer</a>
+            <a href="/history">Automation History</a>
+            <a href="/scheduler" class="active">Scheduler</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+
+        <h1>Scheduler</h1>
+        <p>Schedule your workflows to run automatically.</p>
+
+        <section class="workflow-section">
+
+            <h2>Create Schedule</h2>
+
+            <form action="/add-schedule" method="POST">
+
+                <label>Select Workflow</label>
+
+                <select name="workflow_id" required>
+                    {% for workflow in workflows %}
+                        <option value="{{ workflow.id }}">
+                            {{ workflow.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <label>Schedule Type</label>
+
+                <select name="schedule_type" id="schedule_type" required>
+                    <option value="Once">One Time</option>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                </select>
+
+                <div id="once_fields">
+                    <label>Date and Time</label>
+                    <input type="datetime-local" name="run_at">
+                </div>
+
+                <div id="recurring_fields" style="display:none;">
+
+                    <label>Run Time</label>
+                    <input type="time" name="run_time">
+
+                    <div id="weekly_fields" style="display:none;">
+                        <label>Day of Week</label>
+
+                        <select name="day_of_week">
+                            <option value="0">Monday</option>
+                            <option value="1">Tuesday</option>
+                            <option value="2">Wednesday</option>
+                            <option value="3">Thursday</option>
+                            <option value="4">Friday</option>
+                            <option value="5">Saturday</option>
+                            <option value="6">Sunday</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="create-btn">
+                    Create Schedule
+                </button>
+
+            </form>
+
+        </section>
+
+        <section class="workflow-section">
+
+            <h2>Existing Schedules</h2>
+
+            {% for schedule in schedules %}
+
+                <div class="workflow-item">
+
+                    <div>
+                        <h3>{{ schedule.workflow_name }}</h3>
+                        <p>Type: {{ schedule.schedule_type }}</p>
+
+                        {% if schedule.schedule_type == "Once" %}
+                            <p>Run at: {{ schedule.run_at }}</p>
+                        {% else %}
+                            <p>Time: {{ schedule.run_time }}</p>
+                        {% endif %}
+
+                        <p>
+                            Status:
+                            {{ "Active" if schedule.is_active else "Disabled" }}
+                        </p>
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <p>No schedules created yet.</p>
+
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+const scheduleType = document.getElementById("schedule_type");
+
+const onceFields = document.getElementById("once_fields");
+const recurringFields = document.getElementById("recurring_fields");
+const weeklyFields = document.getElementById("weekly_fields");
+
+function updateScheduleFields() {
+
+    const type = scheduleType.value;
+
+    onceFields.style.display = type === "Once" ? "block" : "none";
+
+    recurringFields.style.display =
+        type === "Once" ? "none" : "block";
+
+    weeklyFields.style.display =
+        type === "Weekly" ? "block" : "none";
+}
+
+scheduleType.addEventListener("change", updateScheduleFields);
+
+updateScheduleFields();
+</script>
+
+</body>
+</html>
