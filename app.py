@@ -1,7 +1,7 @@
 
 from flask import Flask, render_template, request, redirect
 
-from storage import init_db, add_workflow, get_workflows, add_history, get_history, get_dashboard_stats, get_workflow_by_id
+from storage import init_db, add_workflow, get_workflows, add_history, get_history, get_dashboard_stats, get_workflow_by_id, add_schedule, get_schedules
 
 from organizer import scan_folder
 
@@ -149,6 +149,73 @@ def run_workflow_page():
             error=str(error)
         )
 
+@app.route("/add-schedule", methods=["POST"])
+def add_schedule_page():
+
+    workflow_id = request.form.get("workflow_id")
+    schedule_type = request.form.get("schedule_type")
+    run_at = request.form.get("run_at")
+    run_time = request.form.get("run_time")
+    day_of_week = request.form.get("day_of_week")
+
+    try:
+        workflow_id = int(workflow_id)
+
+        if not get_workflow_by_id(workflow_id):
+            raise ValueError("Selected workflow does not exist!")
+        if schedule_type == "Once":
+            if not run_at:
+                raise ValueError("Please provide a date and time for schedule.")
+            add_schedule(
+               workflow_id,
+               schedule_type,
+               run_at=run_at
+           ) 
+        elif schedule_type == "Daily":
+            if not run_time:
+                raise ValueError("Please provide a time for daily schedule.")
+            add_schedule(
+                workflow_id,
+                schedule_type,
+                run_time=run_time
+            )
+        elif schedule_type == "Weekly":
+            if not run_time or not day_of_week:
+                raise ValueError("Please provide a time and day for weekly schedule.")
+            add_schedule(
+                workflow_id,
+                schedule_type,
+                run_time=run_time,
+                day_of_week=day_of_week
+            )
+        else:
+            raise ValueError("Invalid schedule type selected.")
+        return redirect("/scheduler")
+    except (TypeError, ValueError) as error:
+        return render_template(
+            "scheduler.html",
+            workflows=get_workflows(),
+            schedules=get_schedules(),
+            error=str(error)
+        )
+
+    workflow = get_workflow_by_id(workflow_id)
+
+    if not workflow:
+        return redirect("/scheduler")
+
+    add_schedule(workflow_id, schedule_type, run_at, run_time, day_of_week)
+
+    return redirect("/scheduler")
+
+@app.route("/scheduler")
+def scheduler_page():
+
+    return render_template(
+        "scheduler.html",
+        workflows=get_workflows(),
+        schedules=get_schedules()
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

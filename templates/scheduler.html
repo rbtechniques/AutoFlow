@@ -24,16 +24,29 @@
         </nav>
     </aside>
 
-    <main class="main-content">
+    
+<main class="main-content">
 
+    <div class="scheduler-header">
         <h1>Scheduler</h1>
-        <p>Schedule your workflows to run automatically.</p>
+        <p>Plan and manage your automated workflows.</p>
+    </div>
 
-        <section class="workflow-section">
+    {% if error %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
 
-            <h2>Create Schedule</h2>
+    <div class="scheduler-grid">
 
-            <form action="/add-schedule" method="POST">
+        <!-- Create Schedule -->
+
+        <section class="scheduler-card">
+
+            <h2>Create New Schedule</h2>
+
+            <form action="/add-schedule"
+                  method="POST"
+                  class="scheduler-form">
 
                 <label>Select Workflow</label>
 
@@ -54,16 +67,21 @@
                 </select>
 
                 <div id="once_fields">
+
                     <label>Date and Time</label>
+
                     <input type="datetime-local" name="run_at">
+
                 </div>
 
                 <div id="recurring_fields" style="display:none;">
 
                     <label>Run Time</label>
+
                     <input type="time" name="run_time">
 
                     <div id="weekly_fields" style="display:none;">
+
                         <label>Day of Week</label>
 
                         <select name="day_of_week">
@@ -75,6 +93,7 @@
                             <option value="5">Saturday</option>
                             <option value="6">Sunday</option>
                         </select>
+
                     </div>
 
                 </div>
@@ -87,41 +106,65 @@
 
         </section>
 
-        <section class="workflow-section">
+        <!-- Existing Schedules -->
+
+        <section class="scheduler-card">
 
             <h2>Existing Schedules</h2>
 
-            {% for schedule in schedules %}
+            <div class="schedule-list">
 
-                <div class="workflow-item">
+                {% for schedule in schedules %}
 
-                    <div>
+                    <div class="schedule-item">
+
                         <h3>{{ schedule.workflow_name }}</h3>
-                        <p>Type: {{ schedule.schedule_type }}</p>
-
-                        {% if schedule.schedule_type == "Once" %}
-                            <p>Run at: {{ schedule.run_at }}</p>
-                        {% else %}
-                            <p>Time: {{ schedule.run_time }}</p>
-                        {% endif %}
 
                         <p>
-                            Status:
-                            {{ "Active" if schedule.is_active else "Disabled" }}
+                            Type: {{ schedule.schedule_type }}
                         </p>
+
+                        {% if schedule.schedule_type == "Once" %}
+
+                            <p>Run at: {{ schedule.run_at }}</p>
+
+                        {% elif schedule.schedule_type == "Daily" %}
+
+                            <p>Every day at: {{ schedule.run_time }}</p>
+
+                        {% elif schedule.schedule_type == "Weekly" %}
+
+                            <p>Every week at: {{ schedule.run_time }}</p>
+
+                            <p>
+                                Day:
+                                {{ ["Monday", "Tuesday", "Wednesday",
+                                    "Thursday", "Friday", "Saturday",
+                                    "Sunday"][schedule.day_of_week] }}
+                            </p>
+
+                        {% endif %}
+
+                        <span class="schedule-status">
+                            {{ "Active" if schedule.is_active else "Disabled" }}
+                        </span>
+
                     </div>
 
-                </div>
+                {% else %}
 
-            {% else %}
+                    <p>No schedules created yet.</p>
 
-                <p>No schedules created yet.</p>
+                {% endfor %}
 
-            {% endfor %}
+            </div>
 
         </section>
 
-    </main>
+    </div>
+
+</main>
+
 
 </div>
 

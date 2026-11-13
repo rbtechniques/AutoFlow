@@ -369,3 +369,132 @@ body {
 .run-workflow-form button {
     padding: 12px 18px;
 }
+
+
+/* ==============================
+   SCHEDULER PAGE
+============================== */
+
+.scheduler-header {
+    margin-bottom: 30px;
+}
+
+.scheduler-header h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.scheduler-header p {
+    color: #929db1;
+}
+
+/* Scheduler layout */
+
+.scheduler-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 25px;
+    align-items: start;
+}
+
+.scheduler-card {
+    background: #151c2c;
+    border: 1px solid #27334a;
+    border-radius: 14px;
+    padding: 25px;
+}
+
+.scheduler-card h2 {
+    font-size: 19px;
+    margin-bottom: 22px;
+}
+
+.scheduler-form {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.scheduler-form label {
+    color: #cbd5e1;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.scheduler-form input,
+.scheduler-form select {
+    width: 100%;
+    box-sizing: border-box;
+    background: #0b1220;
+    border: 1px solid #303d55;
+    border-radius: 9px;
+    padding: 13px;
+    color: #ffffff;
+    outline: none;
+    font-size: 14px;
+}
+
+.scheduler-form input:focus,
+.scheduler-form select:focus {
+    border-color: #7188ff;
+}
+
+.scheduler-form input[type="datetime-local"],
+.scheduler-form input[type="time"] {
+    color-scheme: dark;
+}
+
+.scheduler-form button {
+    margin-top: 12px;
+    width: 100%;
+}
+
+/* Existing schedules */
+
+.schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.schedule-item {
+    background: #0e1626;
+    border: 1px solid #29364d;
+    border-radius: 11px;
+    padding: 17px;
+}
+
+.schedule-item h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.schedule-item p {
+    color: #929db1;
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+.schedule-status {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+    font-size: 11px;
+}
+
+/* Responsive layout */
+
+@media (max-width: 950px) {
+    .scheduler-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .scheduler-card {
+        padding: 18px;
+    }
+}
