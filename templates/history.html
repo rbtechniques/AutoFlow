@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Automation History | AutoFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>Auto<span>Flow.</span></h2>
+        </div>
+
+        <nav>
+            <p class="nav-heading">WORKSPACE</p>
+
+            <a href="/" class="nav-link">Dashboard</a>
+            <a href="/workflows" class="nav-link">My Workflows</a>
+            <a href="/organizer" class="nav-link">File Organizer</a>
+            <a href="#" class="nav-link">Scheduler</a>
+
+            <p class="nav-heading">MANAGEMENT</p>
+
+            <a href="/history" class="nav-link active">
+                Automation History
+            </a>
+
+            <a href="#" class="nav-link">Settings</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p>AutoFlow v1.0</p>
+            <span>Personal Automation Studio</span>
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1>Automation History</h1>
+                <p>Track your previously executed automations.</p>
+            </div>
+        </header>
+
+
+        <section class="panel">
+
+            <div class="panel-heading">
+                <h2>Recent Activity</h2>
+            </div>
+
+            {% if history %}
+
+                {% for item in history %}
+
+                <div class="history-item">
+
+                    <div class="history-info">
+                        <h3>{{ item.action }}</h3>
+                        <p>{{ item.details }}</p>
+                        <span>{{ item.created_at }}</span>
+                    </div>
+
+                    <div class="history-count">
+                        {{ item.files_moved }} files
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-state">
+                    <h3>No activity yet</h3>
+                    <p>Your automation history will appear here.</p>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
