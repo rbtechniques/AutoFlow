@@ -1,11 +1,14 @@
 
 from flask import Flask, render_template, request, redirect
 
-from storage import init_db, add_workflow, get_workflows, add_history, get_history, get_dashboard_stats
+from storage import init_db, add_workflow, get_workflows, add_history, get_history, get_dashboard_stats, get_workflow_by_id
 
 from organizer import scan_folder
 
 from organizer import scan_folder, organize_folder
+
+from engine import execute_workflow
+
 
 app = Flask(__name__)
 
@@ -105,6 +108,47 @@ def history_page():
         "history.html",
         history=history
     )
+
+
+@app.route("/run-workflow", methods=["POST"])
+def run_workflow_page():
+
+    workflow_id = request.form.get("workflow_id")
+    folder_path = request.form.get("folder_path", "").strip()
+
+    try:
+        workflow_id = int(workflow_id)
+    except (TypeError, ValueError):
+        return redirect("/workflows")
+
+    workflow = get_workflow_by_id(workflow_id)
+
+    if not workflow:
+        return redirect("/workflows")
+
+    try:
+        result = execute_workflow(workflow, folder_path)
+
+        add_history(
+            f"Workflow: {workflow['name']}",
+            result["message"],
+            result["files_processed"]
+        )
+
+        return render_template(
+            "workflows.html",
+            workflows=get_workflows(),
+            message=result["message"]
+        )
+
+    except (ValueError, OSError) as error:
+
+        return render_template(
+            "workflows.html",
+            workflows=get_workflows(),
+            error=str(error)
+        )
+
 
 if __name__ == "__main__":
     app.run(debug=True)

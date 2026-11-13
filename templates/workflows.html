@@ -9,7 +9,17 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+{% if message %}
+    <div class="success-message">
+        {{ message }}
+    </div>
+{% endif %}
 
+{% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+{% endif %}
 <body>
 
     <div class="app-container">
@@ -95,9 +105,36 @@
                     <div class="workflow-item">
                         <div>
                             <h3>{{ workflow.name }}</h3>
+
                             <p>{{ workflow.description }}</p>
+
                             <span>{{ workflow.type }}</span>
                         </div>
+
+                        <form action="/run-workflow" method="POST"
+                            class="run-workflow-form">
+
+                            <input type="hidden"
+                                name="workflow_id"
+                                value="{{ workflow.id }}">
+
+                            {% if workflow.type == "File Management" %}
+
+                                <input
+                                    type="text"
+                                    name="folder_path"
+                                    placeholder="Enter folder path"
+                                    required
+                                >
+
+                            {% endif %}
+
+                            <button type="submit" class="create-btn">
+                                Run Workflow
+                            </button>
+
+                        </form>
+
                     </div>
 
                     {% endfor %}
